@@ -51,16 +51,6 @@ CREATE TABLE candidate_education (
     FOREIGN KEY(candidate_id) REFERENCES candidates(user_id)
 );
 
--- Tabela perguntas comportamentais
-CREATE TABLE candidate_behavior_answers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    candidate_id INTEGER,
-    question_id INTEGER,
-    answer_value INTEGER,
-    created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY(candidate_id) REFERENCES candidates(user_id)
-);
-
 -- Tabela perfil comportamental gerado pela IA
 CREATE TABLE candidate_behavior_profile (
     candidate_id INTEGER PRIMARY KEY,
@@ -75,17 +65,9 @@ CREATE TABLE companies (
     name TEXT,
     description TEXT,
     industry TEXT,
+    culture TEXT, -- cultura da empresa
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
--- Tabela traços culturais das empresas
-CREATE TABLE company_culture_traits (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_id INTEGER,
-    trait TEXT, -- traço cultural (Ex: inovação, colaboração)
-    value INTEGER CHECK(value BETWEEN 1 AND 10),
-    FOREIGN KEY(company_id) REFERENCES companies(user_id)
 );
 
 -- Tabela vagas de emprego
@@ -96,18 +78,10 @@ CREATE TABLE jobs (
     description TEXT,
     salary REAL,
     work_model TEXT, -- remoto, híbrido, presencial
+    required_skills TEXT, -- habilidades requeridas
     created_at TEXT DEFAULT (datetime('now')),
     active INTEGER DEFAULT 1,
     FOREIGN KEY(company_id) REFERENCES companies(user_id)
-);
-
--- Tabela habilidades requeridas para as vagas
-CREATE TABLE job_skills (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    job_id INTEGER,
-    skill_name TEXT,
-    level_required INTEGER,
-    FOREIGN KEY(job_id) REFERENCES jobs(id)
 );
 
 -- Tabela candidaturas às vagas
