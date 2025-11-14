@@ -1,4 +1,4 @@
-package br.com.fiap.repository;
+package br.com.fiap.models.repositories;
 
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.models.entities.User;
