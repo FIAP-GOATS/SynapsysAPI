@@ -2,7 +2,6 @@ package br.com.fiap.models.repositories;
 
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.models.entities.CandidateBehaviorProfile;
-import sun.jvm.hotspot.ui.tree.SimpleTreeModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

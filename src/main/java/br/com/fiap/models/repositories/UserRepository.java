@@ -27,7 +27,7 @@ public class UserRepository {
        PreparedStatement stm = connection.prepareStatement("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
        stm.setString(1, user.getEmail());
        stm.setString(2, user.getPassword());
-       stm.setString(3, user.getRole().name());
+       stm.setString(3, user.getRole().name().toLowerCase());
        stm.executeUpdate();
     }
 
@@ -39,7 +39,7 @@ public class UserRepository {
             User user = new User();
             user.setEmail(result.getString("email"));
             user.setPassword(result.getString("password"));
-            user.setRole(Role.valueOf(result.getString("role")));
+            user.setRole(Role.fromString(result.getString("role")));;
             users.add(user);
         }
         return users;
@@ -55,12 +55,39 @@ public class UserRepository {
                 user.setId(result.getLong("id"));
                 user.setEmail(result.getString("email"));
                 user.setPassword(result.getString("password"));
-                user.setRole(Role.valueOf(result.getString("role")));
+                user.setRole(Role.fromString(result.getString("role")));
                 return user;
             } else {
                 throw new SQLException("Usuário não encontrado");
             }
         }
+    }
+
+    public User getUserByEmail(String email) throws SQLException{
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM users WHERE email = ?");
+        stm.setString(1, email);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            User user = new User();
+            user.setId(result.getLong("id"));
+            user.setEmail(result.getString("email"));
+            user.setPassword(result.getString("password"));
+            user.setRole(Role.fromString(result.getString("role")));
+            return user;
+        } else {
+            return  null;
+        }
+    }
+
+    public boolean checkIfEmailExists(String email) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement("SELECT COUNT(*) AS count FROM users WHERE email = ?");
+        stm.setString(1, email);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            int count = result.getInt("count");
+            return count > 0;
+        }
+        return false;
     }
 
     public void updateUser(User user) throws SQLException {
@@ -84,6 +111,5 @@ public class UserRepository {
             throw new SQLException("Usuário não encontrado");
         }
     }
-
 
 }

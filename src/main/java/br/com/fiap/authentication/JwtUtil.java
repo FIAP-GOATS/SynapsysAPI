@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
+/// Utility class for generating and validating JWT tokens.
 public class JwtUtil {
 
     private static final String SECRET = Global.SecretKey;

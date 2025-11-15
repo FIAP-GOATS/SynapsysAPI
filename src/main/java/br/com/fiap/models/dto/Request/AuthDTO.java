@@ -1,10 +1,10 @@
-package br.com.fiap.authentication;
+package br.com.fiap.models.dto.Request;
 
-public class AuthData {
+public class AuthDTO {
     private Long userId;
     private String role;
 
-    public AuthData(Long userId, String role) {
+    public AuthDTO(Long userId, String role) {
         this.userId = userId;
         this.role = role;
     }
@@ -17,4 +17,3 @@ public class AuthData {
         return role;
     }
 }
-

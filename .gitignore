@@ -38,3 +38,4 @@ build/
 .DS_Store
 
 database.db
+src/main/java/br/com/fiap/Global.java

@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class ConnectionFactory {
 
     
-    private static final String DB_RELATIVE = "src/main/java/br/com/fiap/models/database.db";
+    private static final String DB_RELATIVE = "src/main/java/br/com/fiap/database.db";
     private static final String URL;
 
     static {
