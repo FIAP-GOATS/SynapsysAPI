@@ -24,13 +24,11 @@ public class UserRepository {
     }
 
     public void registerUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
-        try (PreparedStatement stm = connection.prepareStatement(sql)) {
-            stm.setString(1, user.getEmail());
-            stm.setString(2, user.getPassword());
-            stm.setString(3, user.getRole().name());
-            stm.executeUpdate();
-        }
+       PreparedStatement stm = connection.prepareStatement("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
+       stm.setString(1, user.getEmail());
+       stm.setString(2, user.getPassword());
+       stm.setString(3, user.getRole().name());
+       stm.executeUpdate();
     }
 
     public List<User> getAllUsers() throws SQLException{

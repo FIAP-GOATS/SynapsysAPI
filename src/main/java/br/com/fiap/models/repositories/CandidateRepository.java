@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CandidateRepository {
@@ -36,7 +37,7 @@ public class CandidateRepository {
     public List<Candidate> getAllCandidates() throws SQLException{
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM candidates");
         ResultSet result = stm.executeQuery();
-        List<Candidate> candidates = new java.util.ArrayList<>();
+        List<Candidate> candidates = new ArrayList<>();
         while (result.next()) {
             Candidate candidate = new Candidate();
             candidate.setUserId(result.getInt("user_id"));
