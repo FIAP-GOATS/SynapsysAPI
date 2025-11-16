@@ -1,6 +1,5 @@
 package br.com.fiap.controllers;
 
-import br.com.fiap.Services.OpenAiService;
 import br.com.fiap.authentication.AuthUtil;
 import br.com.fiap.models.dto.Request.AuthDTO;
 import br.com.fiap.models.dto.Request.CandidateDTO;
@@ -10,7 +9,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 

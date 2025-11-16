@@ -1,4 +1,4 @@
-package br.com.fiap.Services;
+package br.com.fiap.services;
 
 import br.com.fiap.Global;
 import com.google.gson.JsonArray;
