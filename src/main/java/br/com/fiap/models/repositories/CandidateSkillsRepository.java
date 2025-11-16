@@ -21,7 +21,7 @@ public class CandidateSkillsRepository {
         connection.close();
     }
 
-    public void registerCandidateSkill(CandidateSkills skill) throws SQLException {
+    public void addSkilltoCandidate(CandidateSkills skill) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
                 "INSERT INTO candidate_skills (candidate_id, skill_name, level) VALUES (?, ?, ?);"
         );
@@ -49,11 +49,12 @@ public class CandidateSkillsRepository {
         }
     }
 
-    public CandidateSkills getCandidateSkillByName(String name) throws SQLException {
+    public CandidateSkills getCandidateSkillByName(String name, Long candidateId) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
-                "SELECT * FROM candidate_skills WHERE skill_name = ?"
+                "SELECT * FROM candidate_skills WHERE skill_name = ? AND candidate_id = ?"
         );
         stm.setString(1, name.toLowerCase());
+        stm.setLong(2, candidateId);
         ResultSet result = stm.executeQuery();
         if (result.next()) {
             CandidateSkills skill = new CandidateSkills();
@@ -80,17 +81,7 @@ public class CandidateSkillsRepository {
         }
     }
 
-    public void updateCandidateSkillByName(String name) throws SQLException{
-        PreparedStatement stm = connection.prepareStatement(
-                "UPDATE candidate_skills SET skill_name = ? WHERE skill_name = ?"
-        );
-        stm.setString(1, name.toLowerCase());
-        stm.setString(2, name.toLowerCase());
-        int rowsAffected = stm.executeUpdate();
-        if (rowsAffected == 0) {
-            throw new SQLException("Habilidade não encontrada para atualização");
-        }
-    }
+
 
     public List<CandidateSkills> getSkillsByUser(String username) throws SQLException{
         PreparedStatement stm = connection.prepareStatement(
@@ -110,14 +101,29 @@ public class CandidateSkillsRepository {
         return skills;
     }
 
-    public void deleteCandidateSkill(int id) throws SQLException {
+    public void deleteCandidateSkill(int skill_id) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
                 "DELETE FROM candidate_skills WHERE id = ?"
         );
-        stm.setInt(1, id);
+        stm.setInt(1, skill_id);
         int rowsAffected = stm.executeUpdate();
         if (rowsAffected == 0) {
-            throw new SQLException("Nenhuma habilidade encontrada para deletar com id: " + id);
+            throw new SQLException("Nenhuma habilidade encontrada para deletar");
+        }
+    }
+
+    public Boolean checkIfSkillExists(String skillName, Long candidateId) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement(
+                "SELECT COUNT(*) AS count FROM candidate_skills WHERE skill_name = ? AND candidate_id = ?"
+        );
+        stm.setString(1, skillName.toLowerCase());
+        stm.setLong(2, candidateId);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            int count = result.getInt("count");
+            return count > 0;
+        } else {
+            return false;
         }
     }
 }
