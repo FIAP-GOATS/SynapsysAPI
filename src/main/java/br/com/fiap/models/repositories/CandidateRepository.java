@@ -25,7 +25,7 @@ public class CandidateRepository {
 
     public void registerCandidate(Candidate candidato) throws SQLException{
         PreparedStatement stm = connection.prepareStatement("INSERT INTO candidates (user_id, display_name, purpose, work_style, interests, created_at) VALUES (?, ?, ?, ?, ?, ?)");
-        stm.setInt(1, candidato.getUserId());
+        stm.setLong(1, candidato.getUserId());
         stm.setString(2, candidato.getDisplayName());
         stm.setString(3, candidato.getPurpose());
         stm.setString(4, candidato.getWorkStyle());
@@ -40,7 +40,7 @@ public class CandidateRepository {
         List<Candidate> candidates = new ArrayList<>();
         while (result.next()) {
             Candidate candidate = new Candidate();
-            candidate.setUserId(result.getInt("user_id"));
+            candidate.setUserId(result.getLong("user_id"));
             candidate.setDisplayName(result.getString("display_name"));
             candidate.setPurpose(result.getString("purpose"));
             candidate.setWorkStyle(result.getString("work_style"));
@@ -51,15 +51,15 @@ public class CandidateRepository {
         return candidates;
     }
 
-    public Candidate getCandidateByUserId(int userId) throws SQLException {
+    public Candidate getCandidateByUserId(long userId) throws SQLException {
         String sql = "SELECT * FROM candidates WHERE user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
-            stm.setInt(1, userId);
+            stm.setLong(1, userId);
             ResultSet result = stm.executeQuery();
             if(!result.next()){
                 throw  new SQLException("Candidato não encontrado");
             }
-            int id = result.getInt("user_id");
+            long id = result.getLong("user_id");
             String displayName = result.getString("display_name");
             String purpose = result.getString("purpose");
             String workStyle = result.getString("work_style");
@@ -75,20 +75,31 @@ public class CandidateRepository {
         stm.setString(2, candidate.getPurpose());
         stm.setString(3, candidate.getWorkStyle());
         stm.setString(4, candidate.getInterests());
-        stm.setInt(5, candidate.getUserId());
+        stm.setLong(5, candidate.getUserId());
         int rowsAffected = stm.executeUpdate();
         if (rowsAffected == 0) {
             throw new SQLException("Candidato não encontrado");
         }
     }
 
-    public void deleteCandidate(int userId) throws SQLException {
+    public void deleteCandidate(long userId) throws SQLException {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM candidates WHERE user_id = ?");
-        stm.setInt(1, userId);
+        stm.setLong(1, userId);
         int rowsAffected = stm.executeUpdate();
         if (rowsAffected == 0) {
             throw new SQLException("Candidato não encontrado");
         }
+    }
+
+    public Boolean checkIfCandidateExists(long userId) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement("SELECT COUNT(*) AS count FROM candidates WHERE user_id = ?");
+        stm.setLong(1, userId);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            int count = result.getInt("count");
+            return count > 0;
+        }
+        return false;
     }
 
 }

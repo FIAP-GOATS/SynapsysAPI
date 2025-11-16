@@ -2,14 +2,14 @@ package br.com.fiap.models.entities;
 
 public class CandidateEducation {
     private Integer id;
-    private Integer candidateId;
+    private Long candidateId;
     private String institution;
     private String course;
     private String level;
     private String startDate;
     private String endDate;
 
-    public CandidateEducation(Integer candidateId, String institution, String course, String level, String startDate, String endDate) {
+    public CandidateEducation(Long candidateId, String institution, String course, String level, String startDate, String endDate) {
         this.candidateId = candidateId;
         this.institution = institution;
         this.course = course;
@@ -31,8 +31,8 @@ public class CandidateEducation {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Integer getCandidateId() { return candidateId; }
-    public void setCandidateId(Integer candidateId) { this.candidateId = candidateId; }
+    public Long getCandidateId() { return candidateId; }
+    public void setCandidateId(Long candidateId) { this.candidateId = candidateId; }
 
     public String getInstitution() { return institution; }
     public void setInstitution(String institution) { this.institution = institution; }

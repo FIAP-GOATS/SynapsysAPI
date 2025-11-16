@@ -3,14 +3,14 @@ package br.com.fiap.models.entities;
 import java.time.LocalDateTime;
 
 public class Candidate {
-    private int userId;
+    private long userId;
     private String displayName;
     private String purpose;
     private String workStyle;
     private String interests;
     private LocalDateTime createdAt;
 
-    public Candidate(int userId, String displayName, String purpose, String workStyle, String interests) {
+    public Candidate(long userId, String displayName, String purpose, String workStyle, String interests) {
         this.userId = userId;
         this.displayName = displayName;
         this.purpose = purpose;
@@ -32,8 +32,8 @@ public class Candidate {
     }
 
     // Getters e setters
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public long getUserId() { return userId; }
+    public void setUserId(long userId) { this.userId = userId; }
 
     public String getDisplayName() { return displayName; }
     public void setDisplayName(String displayName) { this.displayName = displayName; }

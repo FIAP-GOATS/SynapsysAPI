@@ -20,7 +20,7 @@ public class CandidateEducationRepository {
     }
     public void registerCandidateEducation(CandidateEducation candidateEducation) throws SQLException {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO candidate_education (candidate_id, institution, course, level, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?);");
-        stm.setInt(1, candidateEducation.getCandidateId());
+        stm.setLong(1, candidateEducation.getCandidateId());
         stm.setString(2, candidateEducation.getInstitution());
         stm.setString(3, candidateEducation.getCourse());
         stm.setString(4, candidateEducation.getLevel());
@@ -35,7 +35,7 @@ public class CandidateEducationRepository {
         ResultSet result = stm.executeQuery();
         if(result.next()){
             CandidateEducation candidateEducation = new CandidateEducation();
-            candidateEducation.setCandidateId(result.getInt("candidate_id"));
+            candidateEducation.setCandidateId(result.getLong("candidate_id"));
             candidateEducation.setInstitution(result.getString("institution"));
             candidateEducation.setCourse(result.getString("course"));
             candidateEducation.setLevel(result.getString("level"));
@@ -53,7 +53,7 @@ public class CandidateEducationRepository {
         stm.setString(3, candidateEducation.getLevel());
         stm.setString(4, candidateEducation.getStartDate());
         stm.setString(5, candidateEducation.getEndDate());
-        stm.setInt(6, candidateEducation.getCandidateId());
+        stm.setLong(6, candidateEducation.getCandidateId());
         int rowsAffected = stm.executeUpdate();
         if (rowsAffected == 0) {
             throw new SQLException("Candidato não encontrado");

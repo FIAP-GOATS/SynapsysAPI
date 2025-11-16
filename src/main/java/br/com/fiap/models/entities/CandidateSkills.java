@@ -2,11 +2,11 @@ package br.com.fiap.models.entities;
 
 public class CandidateSkills {
     private int id;
-    private int candidateId;
+    private long candidateId;
     private String skillName;
     private int level;
 
-    public CandidateSkills(int candidateId, String skillName, int level) {
+    public CandidateSkills(long candidateId, String skillName, int level) {
         this.candidateId = candidateId;
         this.skillName = skillName;
         setLevel(level);
@@ -22,8 +22,8 @@ public class CandidateSkills {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getCandidateId() { return candidateId; }
-    public void setCandidateId(int candidateId) { this.candidateId = candidateId; }
+    public long getCandidateId() { return candidateId; }
+    public void setCandidateId(long candidateId) { this.candidateId = candidateId; }
 
     public String getSkillName() { return skillName; }
     public void setSkillName(String skillName) { this.skillName = skillName; }

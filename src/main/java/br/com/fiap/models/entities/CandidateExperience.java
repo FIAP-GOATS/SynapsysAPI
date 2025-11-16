@@ -2,14 +2,14 @@ package br.com.fiap.models.entities;
 
 public class CandidateExperience {
     private Integer id;
-    private Integer candidateId;
+    private Long candidateId;
     private String companyName;
     private String role;
     private String description;
     private String startDate;
     private String endDate;
 
-    public CandidateExperience(Integer candidateId, String companyName, String role, String description, String startDate, String endDate) {
+    public CandidateExperience(Long candidateId, String companyName, String role, String description, String startDate, String endDate) {
         this.candidateId = candidateId;
         this.companyName = companyName;
         this.role = role;
@@ -31,8 +31,8 @@ public class CandidateExperience {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Integer getCandidateId() { return candidateId; }
-    public void setCandidateId(Integer candidateId) { this.candidateId = candidateId; }
+    public Long getCandidateId() { return candidateId; }
+    public void setCandidateId(Long candidateId) { this.candidateId = candidateId; }
 
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }

@@ -24,10 +24,11 @@ public class UserRepository {
     }
 
     public void registerUser(User user) throws SQLException {
-       PreparedStatement stm = connection.prepareStatement("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
-       stm.setString(1, user.getEmail());
-       stm.setString(2, user.getPassword());
-       stm.setString(3, user.getRole().name().toLowerCase());
+       PreparedStatement stm = connection.prepareStatement("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+       stm.setString(1, user.getUsername());
+       stm.setString(2, user.getEmail());
+       stm.setString(3, user.getPassword());
+       stm.setString(4, user.getRole().name().toLowerCase());
        stm.executeUpdate();
     }
 
@@ -37,9 +38,10 @@ public class UserRepository {
         List<User> users = new ArrayList<>();
         while (result.next()) {
             User user = new User();
+            user.setUsername(result.getString("username"));
             user.setEmail(result.getString("email"));
             user.setPassword(result.getString("password"));
-            user.setRole(Role.fromString(result.getString("role")));;
+            user.setRole(Role.fromString(result.getString("role")));
             users.add(user);
         }
         return users;
@@ -52,6 +54,7 @@ public class UserRepository {
             ResultSet result = stm.executeQuery();
             if (result.next()) {
                 User user = new User();
+                user.setUsername(result.getString("username"));
                 user.setId(result.getLong("id"));
                 user.setEmail(result.getString("email"));
                 user.setPassword(result.getString("password"));
@@ -69,6 +72,24 @@ public class UserRepository {
         ResultSet result = stm.executeQuery();
         if (result.next()) {
             User user = new User();
+            user.setUsername(result.getString("username"));
+            user.setId(result.getLong("id"));
+            user.setEmail(result.getString("email"));
+            user.setPassword(result.getString("password"));
+            user.setRole(Role.fromString(result.getString("role")));
+            return user;
+        } else {
+            return  null;
+        }
+    }
+
+    public User getUserByUsername(String username) throws SQLException{
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
+        stm.setString(1, username);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            User user = new User();
+            user.setUsername(result.getString("username"));
             user.setId(result.getLong("id"));
             user.setEmail(result.getString("email"));
             user.setPassword(result.getString("password"));
@@ -90,12 +111,24 @@ public class UserRepository {
         return false;
     }
 
+    public boolean checkIfUsernameExists(String username) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement("SELECT COUNT(*) AS count FROM users WHERE username = ?");
+        stm.setString(1, username);
+        ResultSet result = stm.executeQuery();
+        if (result.next()) {
+            int count = result.getInt("count");
+            return count > 0;
+        }
+        return false;
+    }
+
     public void updateUser(User user) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement("UPDATE users SET email = ?, password = ?, role = ? WHERE id = ?");
-        stm.setString(1, user.getEmail());
-        stm.setString(2, user.getPassword());
-        stm.setString(3, user.getRole().name());
-        stm.setLong(4, user.getId());
+        PreparedStatement stm = connection.prepareStatement("UPDATE users SET username = ?, email = ?, password = ?, role = ? WHERE id = ?");
+        stm.setString(1, user.getUsername());
+        stm.setString(2, user.getEmail());
+        stm.setString(3, user.getPassword());
+        stm.setString(4, user.getRole().name());
+        stm.setLong(5, user.getId());
         int rowsAffected = stm.executeUpdate();
 
         if (rowsAffected == 0) {

@@ -23,7 +23,7 @@ public class CandidateExperienceRepository {
         PreparedStatement stm = connection.prepareStatement(
                 "INSERT INTO candidate_experience (candidate_id, company, role, description, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?);"
         );
-        stm.setInt(1, experience.getCandidateId());
+        stm.setLong(1, experience.getCandidateId());
         stm.setString(2, experience.getCompanyName());
         stm.setString(3, experience.getRole());
         stm.setString(4, experience.getDescription());
@@ -41,7 +41,7 @@ public class CandidateExperienceRepository {
         if (result.next()) {
             CandidateExperience experience = new CandidateExperience();
             experience.setId(result.getInt("id"));
-            experience.setCandidateId(result.getInt("candidate_id"));
+            experience.setCandidateId(result.getLong("candidate_id"));
             experience.setCompanyName(result.getString("company"));
             experience.setRole(result.getString("role"));
             experience.setDescription(result.getString("description"));
