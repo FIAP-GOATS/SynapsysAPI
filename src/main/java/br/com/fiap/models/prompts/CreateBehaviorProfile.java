@@ -1,4 +1,4 @@
-package br.com.fiap.models.Prompts;
+package br.com.fiap.models.prompts;
 
 public class CreateBehaviorProfile {
     public String systemPrompt = """

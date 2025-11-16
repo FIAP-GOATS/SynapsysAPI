@@ -101,21 +101,9 @@ CREATE TABLE job_fit_scores (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     job_id INTEGER,
     candidate_id INTEGER,
-    technical_score REAL,
-    cultural_score REAL,
-    total_score REAL,
+    score INTEGER,
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY(job_id) REFERENCES jobs(id),
     FOREIGN KEY(candidate_id) REFERENCES candidates(user_id)
 );
 
--- Tabela recomendações de vagas para candidatos
-CREATE TABLE job_recommendations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    candidate_id INTEGER,
-    job_id INTEGER,
-    score REAL,
-    created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY(candidate_id) REFERENCES candidates(user_id),
-    FOREIGN KEY(job_id) REFERENCES jobs(id)
-);
