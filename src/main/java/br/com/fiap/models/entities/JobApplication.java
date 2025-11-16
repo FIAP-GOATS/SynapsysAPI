@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 public class JobApplication {
     private int id;
     private int jobId;
-    private int candidateId;
+    private Long candidateId;
     private LocalDateTime appliedAt;
     private String status;
 
-    public JobApplication(int id, int jobId, int candidateId, LocalDateTime appliedAt, String status) {
+    public JobApplication(int id, int jobId, Long candidateId, LocalDateTime appliedAt, String status) {
         this.id = id;
         this.jobId = jobId;
         this.candidateId = candidateId;
@@ -17,7 +17,7 @@ public class JobApplication {
         this.status = status;
     }
 
-    public JobApplication(int jobId, int candidateId) {
+    public JobApplication(int jobId, Long candidateId) {
         this.jobId = jobId;
         this.candidateId = candidateId;
         this.appliedAt = LocalDateTime.now();
@@ -35,8 +35,8 @@ public class JobApplication {
     public int getJobId() { return jobId; }
     public void setJobId(int jobId) { this.jobId = jobId; }
 
-    public int getCandidateId() { return candidateId; }
-    public void setCandidateId(int candidateId) { this.candidateId = candidateId; }
+    public Long getCandidateId() { return candidateId; }
+    public void setCandidateId(Long candidateId) { this.candidateId = candidateId; }
 
     public LocalDateTime getAppliedAt() { return appliedAt; }
     public void setAppliedAt(LocalDateTime appliedAt) { this.appliedAt = appliedAt; }

@@ -81,8 +81,6 @@ public class CandidateSkillsRepository {
         }
     }
 
-
-
     public List<CandidateSkills> getSkillsByUser(String username) throws SQLException{
         PreparedStatement stm = connection.prepareStatement(
                 "SELECT * FROM candidate_skills WHERE candidate_id = (SELECT id FROM users WHERE username = ?)"

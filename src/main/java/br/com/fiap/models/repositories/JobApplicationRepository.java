@@ -25,7 +25,7 @@ public class JobApplicationRepository {
         String sql = "INSERT INTO job_applications (job_id, candidate_id, status) VALUES (?, ?, ?)";
         PreparedStatement stm = connection.prepareStatement(sql);
         stm.setInt(1, jobApplication.getJobId());
-        stm.setInt(2, jobApplication.getCandidateId());
+        stm.setLong(2, jobApplication.getCandidateId());
         stm.setString(3, jobApplication.getStatus());
         stm.executeUpdate();
         stm.close();
@@ -39,7 +39,7 @@ public class JobApplicationRepository {
             JobApplication jobApplication = new JobApplication();
             jobApplication.setId(result.getInt("id"));
             jobApplication.setJobId(result.getInt("job_id"));
-            jobApplication.setCandidateId(result.getInt("candidate_id"));
+            jobApplication.setCandidateId(result.getLong("candidate_id"));
             jobApplication.setStatus(result.getString("status"));
             return jobApplication;
         } else {
@@ -56,7 +56,7 @@ public class JobApplicationRepository {
             JobApplication jobApplication = new JobApplication();
             jobApplication.setId(result.getInt("id"));
             jobApplication.setJobId(result.getInt("job_id"));
-            jobApplication.setCandidateId(result.getInt("candidate_id"));
+            jobApplication.setCandidateId(result.getLong("candidate_id"));
             jobApplication.setStatus(result.getString("status"));
             jobApplications.add(jobApplication);
         }
@@ -72,7 +72,7 @@ public class JobApplicationRepository {
             JobApplication jobApplication = new JobApplication();
             jobApplication.setId(result.getInt("id"));
             jobApplication.setJobId(result.getInt("job_id"));
-            jobApplication.setCandidateId(result.getInt("candidate_id"));
+            jobApplication.setCandidateId(result.getLong("candidate_id"));
             jobApplication.setStatus(result.getString("status"));
             jobApplications.add(jobApplication);
         }
@@ -87,7 +87,7 @@ public class JobApplicationRepository {
             JobApplication jobApplication = new JobApplication();
             jobApplication.setId(result.getInt("id"));
             jobApplication.setJobId(result.getInt("job_id"));
-            jobApplication.setCandidateId(result.getInt("candidate_id"));
+            jobApplication.setCandidateId(result.getLong("candidate_id"));
             jobApplication.setStatus(result.getString("status"));
             jobApplications.add(jobApplication);
         }
@@ -97,7 +97,7 @@ public class JobApplicationRepository {
     public void updateJobApplication(JobApplication jobApplication) throws SQLException {
         PreparedStatement stm = connection.prepareStatement("UPDATE job_applications SET job_id = ?, candidate_id = ?, status = ? WHERE id = ?");
         stm.setInt(1, jobApplication.getJobId());
-        stm.setInt(2, jobApplication.getCandidateId());
+        stm.setLong(2, jobApplication.getCandidateId());
         stm.setString(3, jobApplication.getStatus());
         stm.setInt(4, jobApplication.getId());
         int rowsAffected = stm.executeUpdate();

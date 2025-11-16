@@ -1,17 +1,16 @@
 package br.com.fiap.controllers;
 
+import br.com.fiap.Services.OpenAiService;
 import br.com.fiap.authentication.AuthUtil;
 import br.com.fiap.models.dto.Request.AuthDTO;
 import br.com.fiap.models.dto.Request.CandidateDTO;
 import br.com.fiap.models.entities.*;
-import br.com.fiap.models.repositories.CandidateEducationRepository;
-import br.com.fiap.models.repositories.CandidateExperienceRepository;
 import br.com.fiap.models.repositories.CandidateRepository;
-import br.com.fiap.models.repositories.CandidateSkillsRepository;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 

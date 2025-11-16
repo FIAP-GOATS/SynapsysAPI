@@ -22,7 +22,7 @@ public class CandidateBehaviorProfileRepository {
 
     public void createCandidateBehaviorProfile(CandidateBehaviorProfile behaviorProfile) throws SQLException{
         PreparedStatement stm = connection.prepareStatement("INSERT INTO CandidateBehaviorProfile (candidateId, aiProfile) VALUES (?, ?)");
-        stm.setInt(1, behaviorProfile.getCandidateId());
+        stm.setLong(1, behaviorProfile.getCandidateId());
         stm.setString(2, behaviorProfile.getAiProfile());
         stm.executeUpdate();
     }
@@ -33,7 +33,7 @@ public class CandidateBehaviorProfileRepository {
         ResultSet result = stm.executeQuery();
         if(result.next()){
             CandidateBehaviorProfile behaviorProfile = new CandidateBehaviorProfile();
-            behaviorProfile.setCandidateId(result.getInt("candidateId"));
+            behaviorProfile.setCandidateId(result.getLong("candidateId"));
             behaviorProfile.setAiProfile(result.getString("aiProfile"));
             return behaviorProfile;
         } else {
@@ -44,7 +44,7 @@ public class CandidateBehaviorProfileRepository {
     public void updateCandidateBehaviorProfile(CandidateBehaviorProfile behaviorProfile) throws SQLException {
         PreparedStatement stm = connection.prepareStatement("UPDATE CandidateBehaviorProfile SET aiProfile = ? WHERE candidateId = ?");
         stm.setString(1, behaviorProfile.getAiProfile());
-        stm.setInt(2, behaviorProfile.getCandidateId());
+        stm.setLong(2, behaviorProfile.getCandidateId());
         stm.executeUpdate();
     }
 
