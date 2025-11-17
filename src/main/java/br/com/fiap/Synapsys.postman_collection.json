@@ -1,0 +1,635 @@
+{
+	"info": {
+		"_postman_id": "e50f0f18-bc48-4838-80ac-ab8953fad40e",
+		"name": "Synapsys",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42653621"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "POST Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"victorhugo@email.com\",\r\n    \"username\":\"porfiriovitin\",\r\n    \"password\":\"12345\",\r\n    \"role\": \"candidate\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1111/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1111",
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User By Id",
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6ImFkbWluQHN5bmFwc2lzLmNvbSIsImlhdCI6MTc2MzIyOTc5MSwiZXhwIjoxNzYzODM0NTkxfQ.FOyJ1Xuyn7QN-tX_ZjGHKQdwRPU8OYA-dyZhC3U9-rw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:1111/user/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1111",
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Candidate",
+			"item": [
+				{
+					"name": "Skills",
+					"item": [
+						{
+							"name": "POST add skill to Candidate",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"skillName\": \"C#\",\r\n    \"level\": 7\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/new-skill",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"new-skill"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT update Candidate skill",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"skillName\": \"Java\",\r\n    \"level\": 7\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/update-skill",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"update-skill"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE candidate skills",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/delete-skill?skillName=c%23",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"delete-skill"
+									],
+									"query": [
+										{
+											"key": "skillName",
+											"value": "c#"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET candidate skills",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/skills/porfiriovitin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"skills",
+										"porfiriovitin"
+									],
+									"query": [
+										{
+											"key": "Authorization",
+											"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+											"disabled": true
+										},
+										{
+											"key": "Content-Type",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Education",
+					"item": [
+						{
+							"name": "POST add education to candidate",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"institution\": \"FIAP\",\r\n    \"course\": \"Engenharia de software\",\r\n    \"level\": \"Superior\",\r\n    \"startDate\": \"01/02/2024\",\r\n    \"endDate\": \"31/12/2027\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/new-education",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"new-education"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT update candidate education",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"institution\": \"\",\r\n    \"course\": \"Engenharia de Software\",\r\n    \"level\": \"\",\r\n    \"startDate\": \"01/02/2024\",\r\n    \"endDate\": \"31/12/2027\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/update-education?institution=FIAP&course=Engenharia de Software",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"update-education"
+									],
+									"query": [
+										{
+											"key": "institution",
+											"value": "FIAP"
+										},
+										{
+											"key": "course",
+											"value": "Engenharia de Software"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET get candidate education",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:1111/candidate/education/porfiriovitin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"education",
+										"porfiriovitin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE delete candidate education",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:1111/candidate/delete-education?institution=FIAP&course=Big Data",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "1111",
+									"path": [
+										"candidate",
+										"delete-education"
+									],
+									"query": [
+										{
+											"key": "institution",
+											"value": "FIAP"
+										},
+										{
+											"key": "course",
+											"value": "Big Data"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST create Candidate",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"displayName\": \"Victor Hugo Porfirio\",\r\n    \"purpose\": \"Buscando emprego\",\r\n    \"workStyle\": \"Sou criativo\",\r\n    \"interests\": \"Engenharia de software, desenvolvimento front-end, devops\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1111/candidate/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1111",
+							"path": [
+								"candidate",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT update Candidate Profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6InZpY3Rvcmh1Z29AZW1haWwuY29tIiwiaWF0IjoxNzYzMzE5MzQ3LCJleHAiOjE3NjM5MjQxNDd9.rVaGobrrHcFZOQSGGnrBNA3fIzZj2ZGtaT5wtnWurb8",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"displayName\": \"\",\r\n    \"purpose\": \"\",\r\n    \"workStyle\": \"Sou criativo e proativo\",\r\n    \"interests\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1111/candidate/update-profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1111",
+							"path": [
+								"candidate",
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"victorhugo@email.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1111/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1111",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
