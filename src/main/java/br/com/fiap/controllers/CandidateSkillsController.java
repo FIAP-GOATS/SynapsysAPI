@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Path("candidate")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -69,7 +68,7 @@ public class CandidateSkillsController {
 
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("status", "error", "message", "Erro ao cadastrar candidato: " + e.getMessage()))
+                    .entity(Map.of("status", "error", "message", e.getMessage()))
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
