@@ -53,12 +53,16 @@ public class JobOpeningRepository {
         }
     }
 
-    public JobOpening getJobsOpeningByCompanyId(int companyId) throws SQLException {
+    public List<JobOpening> getJobsOpeningByCompanyId(int companyId) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
                 "SELECT * FROM jobs WHERE company_id = ?"
         );
+        stm.setInt(1, companyId);
         ResultSet result = stm.executeQuery();
-        if (result.next()) {
+
+        List<JobOpening> jobOpenings = new ArrayList<>();
+
+        while (result.next()) {
             JobOpening jobOpening = new JobOpening();
             jobOpening.setId(result.getInt("id"));
             jobOpening.setCompanyId(result.getInt("company_id"));
@@ -67,10 +71,10 @@ public class JobOpeningRepository {
             jobOpening.setSalary(result.getDouble("salary"));
             jobOpening.setWorkModel(result.getString("work_model"));
             jobOpening.setRequiredSkills(result.getString("required_skills"));
-            return jobOpening;
-        } else {
-            throw new SQLException("Vaga de emprego não encontrada para a empresa ID: " + companyId);
+            jobOpenings.add(jobOpening);
         }
+
+        return jobOpenings;
     }
 
     public List<JobOpening> getJobOpeningByRequiredSkills(String skill) throws SQLException {
