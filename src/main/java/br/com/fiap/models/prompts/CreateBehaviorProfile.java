@@ -1,7 +1,7 @@
 package br.com.fiap.models.prompts;
 
 public class CreateBehaviorProfile {
-    public String systemPrompt = """
+    public static final String systemPrompt = """
             
             Você é uma IA especializada em análise comportamental para recrutamento.
             Receberá três informações de um candidato: propósito, estilo de trabalho e interesses.

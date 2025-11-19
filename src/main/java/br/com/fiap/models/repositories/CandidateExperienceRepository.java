@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CandidateExperienceRepository {
     private Connection connection;
@@ -52,6 +54,31 @@ public class CandidateExperienceRepository {
             throw new SQLException("Experiência do candidato não encontrada");
         }
     }
+
+    public List<CandidateExperience> getCandidateExperiencesByCandidateId(int candidateId) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement(
+                "SELECT * FROM candidate_experience WHERE candidate_id = ?"
+        );
+        stm.setInt(1, candidateId);
+
+        ResultSet result = stm.executeQuery();
+        List<CandidateExperience> experiences = new ArrayList<>();
+
+        while (result.next()) {
+            CandidateExperience experience = new CandidateExperience();
+            experience.setId(result.getInt("id"));
+            experience.setCandidateId(result.getLong("candidate_id"));
+            experience.setCompanyName(result.getString("company"));
+            experience.setRole(result.getString("role"));
+            experience.setDescription(result.getString("description"));
+            experience.setStartDate(result.getString("start_date"));
+            experience.setEndDate(result.getString("end_date"));
+            experiences.add(experience);
+        }
+
+        return experiences;
+    }
+
 
     public void updateCandidateExperience(CandidateExperience experience) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(

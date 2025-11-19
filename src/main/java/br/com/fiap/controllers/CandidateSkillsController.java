@@ -123,16 +123,16 @@ public class CandidateSkillsController {
     }
 
     @GET
-    @Path("skills/{username}")
-    public Response getCandidateSkills(@HeaderParam("Authorization") String authHeader, @PathParam("username") String username) {
+    @Path("skills")
+    public Response getCandidateSkills(@HeaderParam("Authorization") String authHeader) {
         try {
             AuthDTO authData = AuthUtil.extractUser(authHeader);
 
-            List<CandidateSkills> candidateSkillsList = candidateSkillsRepository.getSkillsByUser(username);
+            List<CandidateSkills> candidateSkillsList = candidateSkillsRepository.getCandidateSkillsById(authData.getUserId().intValue());
 
             if (candidateSkillsList.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("status", "error", "message", "Nenhuma habilidade encontrada para o usuário: " + username))
+                        .entity(Map.of("status", "error", "message", "Nenhuma habilidade encontrada para o usuário: " + authData.getUserId()))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
@@ -144,7 +144,7 @@ public class CandidateSkillsController {
 
             if (candidateSkillsDTOList.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("status", "error", "message", "Nenhuma habilidade encontrada para o usuário: " + username))
+                        .entity(Map.of("status", "error", "message", "Nenhuma habilidade encontrada para o usuário: " + authData.getUserId()))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }

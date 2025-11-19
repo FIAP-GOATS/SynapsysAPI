@@ -1,7 +1,7 @@
 package br.com.fiap.models.prompts;
 
 public class JobFitScore {
-    public static String SystemPrompt = """
+    public static final String SystemPrompt = """
             Você é uma IA especialista em recrutamento, combinando análise técnica, experiência, educação e perfil comportamental.
             Você receberá os dados completos do candidato (skills, experiências, educação, perfil comportamental) e os dados da vaga (título, descrição, habilidades requeridas, cultura organizacional, modelo de trabalho).
             

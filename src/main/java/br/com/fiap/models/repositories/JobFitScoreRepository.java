@@ -12,7 +12,8 @@ import java.util.List;
 public class JobFitScoreRepository {
 
     private final Connection connection;
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public JobFitScoreRepository() throws SQLException {
         this.connection = ConnectionFactory.getConnection();
@@ -23,14 +24,13 @@ public class JobFitScoreRepository {
     }
 
     public JobFitScore create(JobFitScore score) throws SQLException {
-        String sql = "INSERT INTO job_fit_scores (job_id, candidate_id, technical_score, cultural_score, total_score, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        // Banco tem coluna "score" (única nota total) e "created_at"
+        String sql = "INSERT INTO job_fit_scores (job_id, candidate_id, score, created_at) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, score.getJobId());
             stm.setInt(2, score.getCandidateId());
-            stm.setDouble(3, score.getTechnicalScore());
-            stm.setDouble(4, score.getCulturalScore());
-            stm.setDouble(5, score.getTotalScore());
-            stm.setString(6, score.getCreatedAt().format(DATE_TIME_FORMATTER));
+            stm.setDouble(3, score.getTotalScore()); // grava totalScore em "score"
+            stm.setString(4, score.getCreatedAt().format(DATE_TIME_FORMATTER));
             stm.executeUpdate();
 
             ResultSet keys = stm.getGeneratedKeys();
@@ -105,14 +105,13 @@ public class JobFitScoreRepository {
     }
 
     public void update(JobFitScore score) throws SQLException {
-        String sql = "UPDATE job_fit_scores SET job_id = ?, candidate_id = ?, technical_score = ?, cultural_score = ?, total_score = ? WHERE id = ?";
+        // Mantemos o schema atual do banco: coluna "score" (sem technical_score/cultural_score/total_score)
+        String sql = "UPDATE job_fit_scores SET job_id = ?, candidate_id = ?, score = ? WHERE id = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, score.getJobId());
             stm.setInt(2, score.getCandidateId());
-            stm.setDouble(3, score.getTechnicalScore());
-            stm.setDouble(4, score.getCulturalScore());
-            stm.setDouble(5, score.getTotalScore());
-            stm.setInt(6, score.getId());
+            stm.setDouble(3, score.getTotalScore()); // atualiza o campo "score" com totalScore
+            stm.setInt(4, score.getId());
             int rows = stm.executeUpdate();
             if (rows == 0) {
                 throw new SQLException("JobFitScore não encontrado para update");
@@ -131,18 +130,58 @@ public class JobFitScoreRepository {
         }
     }
 
+    // Helper para checar se a coluna existe no ResultSet
+    private boolean hasColumn(ResultSet rs, String columnName) throws SQLException {
+        ResultSetMetaData meta = rs.getMetaData();
+        int count = meta.getColumnCount();
+        for (int i = 1; i <= count; i++) {
+            if (columnName.equalsIgnoreCase(meta.getColumnLabel(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private JobFitScore map(ResultSet rs) throws SQLException {
         JobFitScore score = new JobFitScore();
-        score.setId(rs.getInt("id"));
-        score.setJobId(rs.getInt("job_id"));
-        score.setCandidateId(rs.getInt("candidate_id"));
-        score.setTechnicalScore(rs.getDouble("technical_score"));
-        score.setCulturalScore(rs.getDouble("cultural_score"));
-        score.setTotalScore(rs.getDouble("total_score"));
-        String created = rs.getString("created_at");
-        if (created != null) {
-            score.setCreatedAt(LocalDateTime.parse(created, DATE_TIME_FORMATTER));
+
+        // Campos que existem no schema atual
+        if (hasColumn(rs, "id")) {
+            score.setId(rs.getInt("id"));
         }
+        if (hasColumn(rs, "job_id")) {
+            score.setJobId(rs.getInt("job_id"));
+        }
+        if (hasColumn(rs, "candidate_id")) {
+            score.setCandidateId(rs.getInt("candidate_id"));
+        }
+
+        // Total score
+        // Prioridade:
+        // 1) total_score (se existir)
+        // 2) score (coluna atual do banco)
+        if (hasColumn(rs, "total_score")) {
+            score.setTotalScore(rs.getDouble("total_score"));
+        } else if (hasColumn(rs, "score")) {
+            score.setTotalScore(rs.getDouble("score"));
+        }
+
+        // Campos técnicos/culturais são opcionais: preenche só se existirem
+        if (hasColumn(rs, "technical_score")) {
+            score.setTechnicalScore(rs.getDouble("technical_score"));
+        }
+        if (hasColumn(rs, "cultural_score")) {
+            score.setCulturalScore(rs.getDouble("cultural_score"));
+        }
+
+        // created_at (se existir)
+        if (hasColumn(rs, "created_at")) {
+            String created = rs.getString("created_at");
+            if (created != null) {
+                score.setCreatedAt(LocalDateTime.parse(created, DATE_TIME_FORMATTER));
+            }
+        }
+
         return score;
     }
 }

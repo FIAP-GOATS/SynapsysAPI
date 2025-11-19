@@ -280,12 +280,12 @@ public class JobOpeningController {
                         .build();
             }
 
-            if (jobOpening.getCompanyId() != authData.getUserId().intValue()) {
+            /*if (jobOpening.getCompanyId() != authData.getUserId().intValue()) {
                 return Response.status(Response.Status.FORBIDDEN)
                         .entity(Map.of("status", "error", "message", "Você não tem permissão para visualizar o scoreboard desta vaga"))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            }
+            }*/
 
             List<JobFitScore> scores = jobFitScoreRepository.getByJobId(jobId);
 

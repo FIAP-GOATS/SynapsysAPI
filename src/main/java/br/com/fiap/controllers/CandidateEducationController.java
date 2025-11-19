@@ -155,13 +155,12 @@ public class CandidateEducationController {
     }
 
     @GET
-    @Path("education/{username}")
-     public Response getCandidateEducation(@HeaderParam("Authorization") String authHeader,
-                                             @PathParam("username") String username) throws SQLException {
+    @Path("education")
+     public Response getCandidateEducation(@HeaderParam("Authorization") String authHeader) throws SQLException {
         try {
             AuthDTO authData = AuthUtil.extractUser(authHeader);
 
-            List<CandidateEducation> educationList = candidateEducationRepository.getCandidateEducationByUsername(username);
+            List<CandidateEducation> educationList = candidateEducationRepository.getCandidateEducationsByCandidateId(authData.getUserId().intValue());
 
             if(educationList.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND)

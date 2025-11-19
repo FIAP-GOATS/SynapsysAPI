@@ -32,7 +32,7 @@ public class Candidate {
     }
 
     // Getters e setters
-    public long getUserId() { return userId; }
+    public Long getUserId() { return userId; }
     public void setUserId(long userId) { this.userId = userId; }
 
     public String getDisplayName() { return displayName; }

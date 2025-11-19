@@ -3,13 +3,18 @@ package br.com.fiap.controllers;
 import br.com.fiap.authentication.AuthUtil;
 import br.com.fiap.models.dto.Request.AuthDTO;
 import br.com.fiap.models.dto.Request.CandidateDTO;
+import br.com.fiap.models.dto.Request.CandidateSurveyDTO;
 import br.com.fiap.models.entities.*;
+import br.com.fiap.models.prompts.CreateBehaviorProfile;
+import br.com.fiap.models.repositories.CandidateBehaviorProfileRepository;
 import br.com.fiap.models.repositories.CandidateRepository;
+import br.com.fiap.services.OpenAiService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 
 @Path("candidate")
@@ -21,6 +26,7 @@ public class CandidateController {
     }
 
     CandidateRepository candidateRepository = new CandidateRepository();
+    CandidateBehaviorProfileRepository candidateBehaviorProfileRepository = new CandidateBehaviorProfileRepository();
 
     /// ------------------ CANDIDATE METHODS ------------------ ///
 
@@ -147,6 +153,46 @@ public class CandidateController {
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("status", "error", "message", "Erro inesperado: " + e.getMessage()))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+    }
+
+    /// Behavior
+    @PUT
+    @Path("/update-survey")
+    public Response updateCandidateSurvey(@HeaderParam("Authorization") String authHeader, CandidateSurveyDTO candidateSurveyDTO) {
+        try {
+            AuthDTO authData = AuthUtil.extractUser(authHeader);
+
+            Candidate candidate = candidateRepository.getCandidateByUserId(authData.getUserId());
+
+            if (candidate == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("status", "error", "message", "Candidato não encontrado"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            if (candidateSurveyDTO == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("status", "error", "message", "Questionário não informado"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            OpenAiService openAiService = new OpenAiService();
+            String aiBehaviorAnalysis = openAiService.Chat(CreateBehaviorProfile.systemPrompt, candidateSurveyDTO.formatQuestionsToString());
+            CandidateBehaviorProfile candidateBehaviorProfile = new CandidateBehaviorProfile(authData.getUserId(), aiBehaviorAnalysis);
+            candidateBehaviorProfileRepository.createCandidateBehaviorProfile(candidateBehaviorProfile);
+
+            return Response.status(Response.Status.OK)
+                    .entity(Map.of("status", "success", "message", "Questões cadastradas com sucesso"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("status", "error", "message", "Erro ao cadastrar questões - " + e.getMessage()))
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         }

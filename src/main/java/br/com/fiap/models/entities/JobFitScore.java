@@ -6,8 +6,8 @@ public class JobFitScore {
     private int id;
     private int jobId;
     private int candidateId;
-    private double technicalScore;
-    private double culturalScore;
+    private double technicalScore = 0;
+    private double culturalScore = 0;
     private double totalScore;
     private LocalDateTime createdAt;
 

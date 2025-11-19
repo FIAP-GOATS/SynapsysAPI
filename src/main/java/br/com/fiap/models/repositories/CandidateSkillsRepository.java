@@ -99,6 +99,24 @@ public class CandidateSkillsRepository {
         return skills;
     }
 
+    public List<CandidateSkills> getCandidateSkillsById(int id) throws SQLException{
+        PreparedStatement stm = connection.prepareStatement(
+                "SELECT * FROM candidate_skills WHERE candidate_id = ?"
+        );
+        stm.setInt(1, id);
+        ResultSet result = stm.executeQuery();
+        List<CandidateSkills> skills = new ArrayList<>();
+        while (result.next()) {
+            CandidateSkills skill = new CandidateSkills();
+            skill.setId(result.getInt("id"));
+            skill.setCandidateId(result.getInt("candidate_id"));
+            skill.setSkillName(result.getString("skill_name").toLowerCase());
+            skill.setLevel(result.getInt("level"));
+            skills.add(skill);
+        }
+        return skills;
+    }
+
     public void deleteCandidateSkill(int skill_id) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
                 "DELETE FROM candidate_skills WHERE id = ?"

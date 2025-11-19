@@ -92,6 +92,27 @@ public class CandidateEducationRepository {
         return educationList;
     }
 
+    public List<CandidateEducation> getCandidateEducationsByCandidateId(int id) throws SQLException {
+        PreparedStatement stm = connection.prepareStatement(
+                "SELECT * FROM candidate_education WHERE candidate_id = ?"
+        );
+        stm.setInt(1, id);
+        ResultSet result = stm.executeQuery();
+        List<CandidateEducation> educationList = new java.util.ArrayList<>();
+        while (result.next()) {
+            CandidateEducation candidateEducation = new CandidateEducation();
+            candidateEducation.setId(result.getInt("id"));
+            candidateEducation.setCandidateId(result.getLong("candidate_id"));
+            candidateEducation.setInstitution(result.getString("institution"));
+            candidateEducation.setCourse(result.getString("course"));
+            candidateEducation.setLevel(result.getString("level"));
+            candidateEducation.setStartDate(result.getString("start_date"));
+            candidateEducation.setEndDate(result.getString("end_date"));
+            educationList.add(candidateEducation);
+        }
+        return educationList;
+    }
+
     public void updateCandidateEducation(CandidateEducation candidateEducation) throws SQLException {
         PreparedStatement stm = connection.prepareStatement("UPDATE candidate_education SET institution = ?, course = ?, level = ?, start_date = ?, end_date = ? WHERE candidate_id = ?");
         stm.setString(1, candidateEducation.getInstitution());

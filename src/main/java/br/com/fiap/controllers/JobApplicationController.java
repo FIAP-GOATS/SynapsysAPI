@@ -5,8 +5,8 @@ import br.com.fiap.models.dto.Request.AuthDTO;
 import br.com.fiap.models.dto.Request.JobApplicationDTO;
 import br.com.fiap.models.entities.JobApplication;
 import br.com.fiap.models.entities.JobOpening;
-import br.com.fiap.models.repositories.JobApplicationRepository;
-import br.com.fiap.models.repositories.JobOpeningRepository;
+import br.com.fiap.models.repositories.*;
+import br.com.fiap.services.JobApplicationWorker;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -25,6 +25,25 @@ public class JobApplicationController {
 
     JobApplicationRepository jobApplicationRepository = new JobApplicationRepository();
     JobOpeningRepository jobOpeningRepository = new JobOpeningRepository();
+    CandidateRepository candidateRepository = new CandidateRepository();
+    CandidateBehaviorProfileRepository candidateBehaviorProfileRepository = new CandidateBehaviorProfileRepository();
+    CandidateEducationRepository candidateEducationRepository = new CandidateEducationRepository();
+    CandidateSkillsRepository candidateSkillsRepository = new CandidateSkillsRepository();
+    CandidateExperienceRepository candidateExperienceRepository = new CandidateExperienceRepository();
+    JobFitScoreRepository jobFitScoreRepository = new JobFitScoreRepository();
+
+
+    JobApplicationWorker jobApplicationWorker = new JobApplicationWorker(
+            jobApplicationRepository,
+            jobOpeningRepository,
+            candidateRepository,
+            candidateBehaviorProfileRepository,
+            candidateEducationRepository,
+            candidateSkillsRepository,
+            candidateExperienceRepository,
+            jobFitScoreRepository
+    );
+
 
     /// ------------------ JOB APPLICATION METHODS ------------------ ///
 
@@ -54,6 +73,8 @@ public class JobApplicationController {
             jobApplication.setCandidateId(authData.getUserId());
             jobApplication.setStatus("pending");
             jobApplicationRepository.createJobApplication(jobApplication);
+
+            jobApplicationWorker.run(jobApplication);
 
             return Response.status(Response.Status.OK)
                     .entity(Map.of("status", "success", "message", "Candidatura criada com sucesso"))
