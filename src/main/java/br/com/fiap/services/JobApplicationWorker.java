@@ -1,7 +1,8 @@
 package br.com.fiap.services;
 
 import br.com.fiap.models.entities.*;
-import static br.com.fiap.models.prompts.JobFitScore.SystemPrompt;
+
+import br.com.fiap.models.prompts.JobFitScorePrompt;
 import br.com.fiap.models.repositories.*;
 
 import java.io.IOException;
@@ -12,28 +13,31 @@ import java.util.stream.Collectors;
 public class JobApplicationWorker {
 
     private final JobOpeningRepository jobOpeningRepository;
-    private final CandidateRepository candidateRepository;
     private final CandidateBehaviorProfileRepository candidateBehaviorProfileRepository;
     private final CandidateEducationRepository candidateEducationRepository;
     private final CandidateSkillsRepository candidateSkillsRepository;
     private final CandidateExperienceRepository candidateExperienceRepository;
     private final JobFitScoreRepository jobFitScoreRepository;
+    private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
 
     public JobApplicationWorker(JobApplicationRepository jobApplicationRepository,
                                 JobOpeningRepository jobOpeningRepository,
-                                CandidateRepository candidateRepository,
                                 CandidateBehaviorProfileRepository candidateBehaviorProfileRepository,
                                 CandidateEducationRepository candidateEducationRepository,
                                 CandidateSkillsRepository candidateSkillsRepository,
                                 CandidateExperienceRepository candidateExperienceRepository,
-                                JobFitScoreRepository jobFitScoreRepository) {
+                                JobFitScoreRepository jobFitScoreRepository,
+                                UserRepository userRepository,
+                                CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
         this.jobOpeningRepository = jobOpeningRepository;
-        this.candidateRepository = candidateRepository;
         this.candidateBehaviorProfileRepository = candidateBehaviorProfileRepository;
         this.candidateEducationRepository = candidateEducationRepository;
         this.candidateSkillsRepository = candidateSkillsRepository;
         this.candidateExperienceRepository = candidateExperienceRepository;
         this.jobFitScoreRepository = jobFitScoreRepository;
+        this.userRepository = userRepository;
     }
 
     public void run(JobApplication jobApplication)
@@ -74,7 +78,7 @@ public class JobApplicationWorker {
         Long candidateId = jobApplication.getCandidateId();
 
         JobOpening job = jobOpeningRepository.getJobOpeningById(jobApplication.getJobId());
-        Candidate candidate = candidateRepository.getCandidateByUserId(candidateId);
+        User candidate = userRepository.getUserById(candidateId);
         CandidateBehaviorProfile candidateBehaviorProfile =
                 candidateBehaviorProfileRepository.getCandidateBehaviorProfileByCandidateId(candidateId.intValue());
         List<CandidateEducation> candidateEducations =
@@ -83,6 +87,8 @@ public class JobApplicationWorker {
                 candidateSkillsRepository.getCandidateSkillsById(candidateId.intValue());
         List<CandidateExperience> candidateExperiences =
                 candidateExperienceRepository.getCandidateExperiencesByCandidateId(candidateId.intValue());
+
+        Company company = companyRepository.getCompanyById(job.getCompanyId());
 
         String educationInfo = candidateEducations == null || candidateEducations.isEmpty()
                 ? "- No education information registered"
@@ -125,55 +131,62 @@ public class JobApplicationWorker {
                 ))
                 .collect(Collectors.joining(System.lineSeparator()));
 
-        String compiledData = String.format(
-                """
-                --Candidate Information--
-                General:
-                - Purpose: %s
-                - Work Style: %s
-                - Interests: %s
-                - Behavior Profile: %s
+        String candidateBehaviorProfileInfo = candidateBehaviorProfile != null
+                ? candidateBehaviorProfile.getAiProfile()
+                : "- No behavior profile registered";
 
-                Education:
-                %s
-
-                Experience:
-                %s
-
-                Skills:
-                %s
-
-                --Job Information--
-                - Title: %s
-                - Description: %s
-                - Work Model: %s
-                - Required Skills: %s
-                """,
-                candidate.getPurpose(),
-                candidate.getWorkStyle(),
-                candidate.getInterests(),
-                candidateBehaviorProfile.getAiProfile(),
-                educationInfo,
-                experienceInfo,
-                skillsInfo,
+        String JobsInfo = String.format(
+                "Job Title: %s%n" +
+                        "Job Description: %s%n" +
+                        "Job Requirements: %s%n",
                 job.getTitle(),
                 job.getDescription(),
-                job.getWorkModel(),
                 job.getRequiredSkills()
         );
 
-        OpenAiService openAiService = new OpenAiService();
-        String score = openAiService.Chat(SystemPrompt, compiledData);
-
-        JobFitScore jobFitScore = new JobFitScore(
-                job.getId(),
-                candidate.getUserId().intValue(),
-                0,
-                0,
-                Double.parseDouble(score)
+        String CompanyInfo = String.format(
+                "Company Name: %s%n" +
+                        "Company Description: %s%n" +
+                        "Company Industry: %s%n" +
+                        "Company Culture: %s%n",
+                company.getName(),
+                company.getDescription(),
+                company.getIndustry(),
+                company.getCulture()
         );
 
-        JobFitScore newJobFitScore = jobFitScoreRepository.create(jobFitScore);
+        String compiledString = String.format(
+                "Candidate Name: %s%n" +
+                        "Candidate Email: %s%n" +
+                        "Candidate Behavior Profile:%n%s%n%n" +
+                        "Candidate Education:%n%s%n%n" +
+                        "Candidate Experience:%n%s%n%n" +
+                        "Candidate Skills:%n%s%n%n" +
+                        "Job Information:%n%s%n%n" +
+                        "Company Information:%n%s%n",
+                candidate.getUsername(),
+                candidate.getEmail(),
+                candidateBehaviorProfileInfo,
+                educationInfo,
+                experienceInfo,
+                skillsInfo,
+                JobsInfo,
+                CompanyInfo
+        );
+
+        OpenAiService openAiService = new OpenAiService();
+
+        String aiResponse = openAiService.Chat(JobFitScorePrompt.SystemPrompt, compiledString);
+
+        int fitScore = Integer.parseInt(aiResponse.trim());
+
+        JobFitScore score = new JobFitScore();
+        score.setJobId(job.getId());
+        score.setCandidateId(candidateId.intValue());
+        score.setTotalScore(fitScore);
+
+        jobFitScoreRepository.create(score);
+
         return;
     }
 }

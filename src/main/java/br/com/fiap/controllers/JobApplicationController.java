@@ -25,23 +25,25 @@ public class JobApplicationController {
 
     JobApplicationRepository jobApplicationRepository = new JobApplicationRepository();
     JobOpeningRepository jobOpeningRepository = new JobOpeningRepository();
-    CandidateRepository candidateRepository = new CandidateRepository();
     CandidateBehaviorProfileRepository candidateBehaviorProfileRepository = new CandidateBehaviorProfileRepository();
     CandidateEducationRepository candidateEducationRepository = new CandidateEducationRepository();
     CandidateSkillsRepository candidateSkillsRepository = new CandidateSkillsRepository();
     CandidateExperienceRepository candidateExperienceRepository = new CandidateExperienceRepository();
     JobFitScoreRepository jobFitScoreRepository = new JobFitScoreRepository();
+    UserRepository userRepository = new UserRepository();
+    CompanyRepository companyRepository = new CompanyRepository();
 
 
     JobApplicationWorker jobApplicationWorker = new JobApplicationWorker(
             jobApplicationRepository,
             jobOpeningRepository,
-            candidateRepository,
             candidateBehaviorProfileRepository,
             candidateEducationRepository,
             candidateSkillsRepository,
             candidateExperienceRepository,
-            jobFitScoreRepository
+            jobFitScoreRepository,
+            userRepository,
+            companyRepository
     );
 
 
