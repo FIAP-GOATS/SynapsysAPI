@@ -3,6 +3,7 @@ package br.com.fiap.controllers;
 import br.com.fiap.authentication.AuthUtil;
 import br.com.fiap.models.dto.Request.AuthDTO;
 import br.com.fiap.models.dto.Request.JobOpeningDTO;
+import br.com.fiap.models.dto.Response.JobOpeningWithCompanyNameDTO;
 import br.com.fiap.models.entities.JobFitScore;
 import br.com.fiap.models.entities.JobOpening;
 import br.com.fiap.models.repositories.JobFitScoreRepository;
@@ -110,7 +111,7 @@ public class JobOpeningController {
         try {
             AuthDTO authData = AuthUtil.extractUser(authHeader);
 
-            List<JobOpening> jobOpenings =
+            List<JobOpeningWithCompanyNameDTO> jobOpenings =
                     jobOpeningRepository.getJobsOpeningByCompanyId(authData.getUserId().intValue());
 
             return Response.status(Response.Status.OK)
@@ -139,6 +140,8 @@ public class JobOpeningController {
     public Response getAllJobOpenings() throws SQLException {
         try {
             var jobOpenings = jobOpeningRepository.getAllJobOpenings();
+
+
 
             return Response.status(Response.Status.OK)
                     .entity(Map.of("status", "success", "data", jobOpenings))

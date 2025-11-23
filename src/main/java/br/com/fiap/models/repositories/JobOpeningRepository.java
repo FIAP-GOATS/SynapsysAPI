@@ -1,6 +1,7 @@
 package br.com.fiap.models.repositories;
 
 import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.models.dto.Response.JobOpeningWithCompanyNameDTO;
 import br.com.fiap.models.entities.JobOpening;
 
 import java.sql.Connection;
@@ -53,28 +54,35 @@ public class JobOpeningRepository {
         }
     }
 
-    public List<JobOpening> getJobsOpeningByCompanyId(int companyId) throws SQLException {
+    public List<JobOpeningWithCompanyNameDTO> getJobsOpeningByCompanyId(int companyId) throws SQLException {
         PreparedStatement stm = connection.prepareStatement(
-                "SELECT * FROM jobs WHERE company_id = ?"
+                "SELECT j.*, c.name AS company_name " +
+                        "FROM jobs j " +
+                        "JOIN companies c ON j.company_id = c.user_id " +
+                        "WHERE j.company_id = ?"
         );
+
         stm.setInt(1, companyId);
         ResultSet result = stm.executeQuery();
 
-        List<JobOpening> jobOpenings = new ArrayList<>();
+        List<JobOpeningWithCompanyNameDTO> items = new ArrayList<>();
 
         while (result.next()) {
-            JobOpening jobOpening = new JobOpening();
-            jobOpening.setId(result.getInt("id"));
-            jobOpening.setCompanyId(result.getInt("company_id"));
-            jobOpening.setTitle(result.getString("title"));
-            jobOpening.setDescription(result.getString("description"));
-            jobOpening.setSalary(result.getDouble("salary"));
-            jobOpening.setWorkModel(result.getString("work_model"));
-            jobOpening.setRequiredSkills(result.getString("required_skills"));
-            jobOpenings.add(jobOpening);
+            JobOpening job = new JobOpening();
+            job.setId(result.getInt("id"));
+            job.setCompanyId(result.getInt("company_id"));
+            job.setTitle(result.getString("title"));
+            job.setDescription(result.getString("description"));
+            job.setSalary(result.getDouble("salary"));
+            job.setWorkModel(result.getString("work_model"));
+            job.setRequiredSkills(result.getString("required_skills"));
+
+            String companyName = result.getString("company_name");
+
+            items.add(new JobOpeningWithCompanyNameDTO(companyName, job));
         }
 
-        return jobOpenings;
+        return items;
     }
 
     public List<JobOpening> getJobOpeningByRequiredSkills(String skill) throws SQLException {
@@ -115,22 +123,38 @@ public class JobOpeningRepository {
         return jobOpenings;
     }
 
-    public List<JobOpening> getAllJobOpenings() throws SQLException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM jobs WHERE active = 1");
+    public List<JobOpeningWithCompanyNameDTO> getAllJobOpenings() throws SQLException {
+
+        PreparedStatement stm = connection.prepareStatement(
+                "SELECT j.*, c.name AS company_name " +
+                        "FROM jobs j " +
+                        "JOIN companies c ON j.company_id = c.user_id " +
+                        "WHERE j.active = 1"
+        );
+
         ResultSet result = stm.executeQuery();
-        List<JobOpening> jobOpenings = new ArrayList<>();
+        List<JobOpeningWithCompanyNameDTO> list = new ArrayList<>();
+
         while (result.next()) {
-            JobOpening jobOpening = new JobOpening();
-            jobOpening.setId(result.getInt("id"));
-            jobOpening.setCompanyId(result.getInt("company_id"));
-            jobOpening.setTitle(result.getString("title"));
-            jobOpening.setDescription(result.getString("description"));
-            jobOpening.setSalary(result.getDouble("salary"));
-            jobOpening.setWorkModel(result.getString("work_model"));
-            jobOpening.setRequiredSkills(result.getString("required_skills"));
-            jobOpenings.add(jobOpening);
+
+            // monta objeto JobOpening normal
+            JobOpening job = new JobOpening();
+            job.setId(result.getInt("id"));
+            job.setCompanyId(result.getInt("company_id"));
+            job.setTitle(result.getString("title"));
+            job.setDescription(result.getString("description"));
+            job.setSalary(result.getDouble("salary"));
+            job.setWorkModel(result.getString("work_model"));
+            job.setRequiredSkills(result.getString("required_skills"));
+
+            // pega o nome da empresa
+            String companyName = result.getString("company_name");
+
+            // adiciona o DTO na lista
+            list.add(new JobOpeningWithCompanyNameDTO(companyName, job));
         }
-        return jobOpenings;
+
+        return list;
     }
 
     public void updateJobOpening(JobOpening jobOpening) throws SQLException {
