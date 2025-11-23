@@ -2,6 +2,7 @@ package br.com.fiap.controllers;
 
 import br.com.fiap.authentication.AuthUtil;
 import br.com.fiap.models.dto.Request.AuthDTO;
+import br.com.fiap.models.dto.Request.CompanyDTO;
 import br.com.fiap.models.entities.Company;
 import br.com.fiap.models.repositories.CompanyRepository;
 import jakarta.ws.rs.*;
@@ -26,39 +27,39 @@ public class CompanyController {
     /// Create a new company profile
     @POST
     @Path("/create")
-    public Response createCompany(@HeaderParam("Authorization") String authHeader, Company companyBody) throws SQLException {
+    public Response createCompany(@HeaderParam("Authorization") String authHeader, CompanyDTO companyDTO) throws SQLException {
         try {
             AuthDTO authData = AuthUtil.extractUser(authHeader);
 
-            if (companyBody == null) {
+            if (companyDTO == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("status", "error", "message", "Dados da empresa não informados"))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
 
-            if (companyBody.getName() == null || companyBody.getName().trim().isEmpty()) {
+            if (companyDTO.getName() == null || companyDTO.getName().trim().isEmpty()) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("status", "error", "message", "Nome da empresa é obrigatório"))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
 
-            if (companyBody.getDescription() == null || companyBody.getDescription().trim().isEmpty()) {
+            if (companyDTO.getDescription() == null || companyDTO.getDescription().trim().isEmpty()) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("status", "error", "message", "Descrição da empresa é obrigatória"))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
 
-            if (companyBody.getIndustry() == null || companyBody.getIndustry().trim().isEmpty()) {
+            if (companyDTO.getIndustry() == null || companyDTO.getIndustry().trim().isEmpty()) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("status", "error", "message", "Setor/Indústria é obrigatório"))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
 
-            if (companyBody.getCulture() == null || companyBody.getCulture().trim().isEmpty()) {
+            if (companyDTO.getCulture() == null || companyDTO.getCulture().trim().isEmpty()) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("status", "error", "message", "Cultura da empresa é obrigatória"))
                         .type(MediaType.APPLICATION_JSON)
@@ -67,10 +68,10 @@ public class CompanyController {
 
             Company company = new Company();
             company.setUserId(authData.getUserId().intValue());
-            company.setName(companyBody.getName());
-            company.setDescription(companyBody.getDescription());
-            company.setIndustry(companyBody.getIndustry());
-            company.setCulture(companyBody.getCulture());
+            company.setName(companyDTO.getName());
+            company.setDescription(companyDTO.getDescription());
+            company.setIndustry(companyDTO.getIndustry());
+            company.setCulture(companyDTO.getCulture());
 
             companyRepository.registerCompany(company);
 
