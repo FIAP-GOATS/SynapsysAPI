@@ -159,42 +159,42 @@ public class CandidateController {
     }
 
     /// Behavior
-    @PUT
-    @Path("/update-survey")
-    public Response updateCandidateSurvey(@HeaderParam("Authorization") String authHeader, CandidateSurveyDTO candidateSurveyDTO) {
-        try {
-            AuthDTO authData = AuthUtil.extractUser(authHeader);
+    @POST
+    @Path("/create-behavior-profile")
+    public Response createBehaviorProfile(@HeaderParam("Authorization") String authHeader, CandidateSurveyDTO candidateSurveyDTO) {
+        {
+            try {
+                AuthDTO authData = AuthUtil.extractUser(authHeader);
 
-            Candidate candidate = candidateRepository.getCandidateByUserId(authData.getUserId());
+                if (candidateSurveyDTO == null) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("status", "error", "message", "Questionário não informado"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build();
+                }
 
-            if (candidate == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("status", "error", "message", "Candidato não encontrado"))
+                OpenAiService openai = new OpenAiService();
+
+                String behaviorProfile = openai.Chat(CreateBehaviorProfile.systemPrompt, candidateSurveyDTO.toStringProfile());
+
+                System.out.println("OpenAI retornou: " + behaviorProfile);
+
+                CandidateBehaviorProfile candidateBehaviorProfile = new CandidateBehaviorProfile();
+                candidateBehaviorProfile.setCandidateId(authData.getUserId());
+                candidateBehaviorProfile.setAiProfile(behaviorProfile);
+
+                candidateBehaviorProfileRepository.createCandidateBehaviorProfile(candidateBehaviorProfile);
+
+                return Response.status(Response.Status.OK)
+                        .entity(Map.of("status", "success", "message", "Perfil comportamental cadastrado com sucesso"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(Map.of("status", "error", "message", "Erro ao cadastrar perfil comportamental " + e.getMessage()))
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
-            if (candidateSurveyDTO == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("status", "error", "message", "Questionário não informado"))
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
-
-            OpenAiService openAiService = new OpenAiService();
-            String aiBehaviorAnalysis = openAiService.Chat(CreateBehaviorProfile.systemPrompt, candidateSurveyDTO.formatQuestionsToString());
-            CandidateBehaviorProfile candidateBehaviorProfile = new CandidateBehaviorProfile(authData.getUserId(), aiBehaviorAnalysis);
-            candidateBehaviorProfileRepository.createCandidateBehaviorProfile(candidateBehaviorProfile);
-
-            return Response.status(Response.Status.OK)
-                    .entity(Map.of("status", "success", "message", "Questões cadastradas com sucesso"))
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("status", "error", "message", "Erro ao cadastrar questões - " + e.getMessage()))
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
         }
     }
 }
