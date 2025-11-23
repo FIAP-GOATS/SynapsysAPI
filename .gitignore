@@ -39,3 +39,5 @@ build/
 
 database.db
 src/main/java/br/com/fiap/Global.java
+database.db-shm
+database.db-wal

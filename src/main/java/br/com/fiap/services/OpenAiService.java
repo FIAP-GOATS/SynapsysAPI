@@ -55,6 +55,4 @@ public class OpenAiService {
         JsonObject message = choices.get(0).getAsJsonObject().getAsJsonObject("message");
         return message.get("content").getAsString();
     }
-
-
 }
